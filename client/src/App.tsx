@@ -1,5 +1,11 @@
 import React, { Component } from 'react'
-import { Link, Route, Router, Switch } from 'react-router-dom'
+import {
+  HistoryRouterProps,
+  Link,
+  Route,
+  Router,
+  Routes
+} from 'react-router-dom'
 import { Grid, Menu, Segment } from 'semantic-ui-react'
 
 import Auth from './auth/Auth'
@@ -12,7 +18,7 @@ export interface AppProps {}
 
 export interface AppProps {
   auth: Auth
-  history: any
+  history: HistoryRouterProps
 }
 
 export interface AppState {}
@@ -40,9 +46,8 @@ export default class App extends Component<AppProps, AppState> {
           <Grid container stackable verticalAlign="middle">
             <Grid.Row>
               <Grid.Column width={16}>
-                <Router history={this.props.history}>
+                <Router navigator={this.props.history}>
                   {this.generateMenu()}
-
                   {this.generateCurrentPage()}
                 </Router>
               </Grid.Column>
@@ -87,25 +92,23 @@ export default class App extends Component<AppProps, AppState> {
     }
 
     return (
-      <Switch>
+      <Routes>
         <Route
           path="/"
-          exact
-          render={props => {
+          Component={(props) => {
             return <Todos {...props} auth={this.props.auth} />
           }}
         />
 
         <Route
           path="/todos/:todoId/edit"
-          exact
-          render={props => {
+          Component={(props) => {
             return <EditTodo {...props} auth={this.props.auth} />
           }}
         />
 
         <Route component={NotFound} />
-      </Switch>
+      </Routes>
     )
   }
 }
